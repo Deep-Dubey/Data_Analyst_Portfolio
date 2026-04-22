@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { FiMail, FiMapPin, FiPhone, FiSend, FiGithub, FiLinkedin, FiTwitter, FiCheckCircle, FiX } from 'react-icons/fi'
+import { useState, useRef, useEffect } from 'react'
+import { FiMail, FiMapPin, FiPhone, FiSend, FiGithub, FiLinkedin, FiTwitter, FiCheckCircle, FiX, FiZap } from 'react-icons/fi'
 import emailjs from '@emailjs/browser'
 import SectionParallax from './SectionParallax'
 
@@ -8,6 +8,71 @@ export default function Contact() {
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
   const [error, setError] = useState('')
+  const [aiSuggestions, setAiSuggestions] = useState([])
+  const [aiLoading, setAiLoading] = useState(false)
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const suggestPanelRef = useRef(null)
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (suggestPanelRef.current && !suggestPanelRef.current.contains(e.target)) {
+        setShowSuggestions(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  const generateSuggestions = async () => {
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY
+    setShowSuggestions(true)
+    setAiLoading(true)
+    setAiSuggestions([])
+
+    if (!apiKey) {
+      setAiSuggestions([
+        "Hi Deep, I came across your portfolio and I'm impressed by your data analysis skills. I have a project that involves large-scale data insights and would love to discuss how you could help.",
+        "Hello, I'm looking for a data analyst to help my team build dashboards and automate reporting pipelines. Your work looks like a great fit — could we schedule a quick call?",
+        "Hi, I have a business challenge involving messy datasets and unclear KPIs. I'd love your expertise to clean the data and surface actionable insights. Looking forward to connecting!"
+      ])
+      setAiLoading(false)
+      return
+    }
+
+    try {
+      const context = [
+        form.name && `The sender's name is ${form.name}.`,
+        form.subject && `Email subject: "${form.subject}".`,
+        'They are contacting a professional data analyst.'
+      ].filter(Boolean).join(' ')
+
+      const prompt = `Generate exactly 3 different short professional email body suggestions for someone contacting a data analyst for their portfolio. ${context} Each suggestion should be 2-3 sentences, friendly yet professional, and specific to data analysis / business intelligence work. Return ONLY a valid JSON array of 3 strings with no extra text or markdown. Example format: ["msg1","msg2","msg3"]`
+
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        }
+      )
+      const data = await res.json()
+      const raw = data.candidates?.[0]?.content?.parts?.[0]?.text ?? '[]'
+      const match = raw.match(/\[[\s\S]*\]/)
+      const parsed = match ? JSON.parse(match[0]) : []
+      setAiSuggestions(parsed.length ? parsed : ['Could not parse suggestions. Please try again.'])
+    } catch (err) {
+      console.error('AI suggestion error:', err)
+      setAiSuggestions(['Failed to generate suggestions. Please try again.'])
+    } finally {
+      setAiLoading(false)
+    }
+  }
+
+  const applySuggestion = (text) => {
+    setForm(f => ({ ...f, message: text }))
+    setShowSuggestions(false)
+  }
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value })
   const handleSubmit = async (e) => {
@@ -140,8 +205,58 @@ export default function Contact() {
                 value={form.subject} onChange={handleChange} required className={inputCls} />
             </div>
 
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs text-text-secondary font-semibold" htmlFor="message">Message</label>
+            <div className="flex flex-col gap-1.5" ref={suggestPanelRef}>
+              <div className="flex items-center justify-between">
+                <label className="text-xs text-text-secondary font-semibold" htmlFor="message">Message</label>
+                <button
+                  type="button"
+                  onClick={generateSuggestions}
+                  className="inline-flex items-center gap-1.5 text-[0.7rem] font-semibold px-2.5 py-1 rounded-lg
+                    bg-accent-purple/10 border border-accent-purple/25 text-accent-purple
+                    hover:bg-accent-purple/20 hover:border-accent-purple/50 transition-all duration-200"
+                >
+                  <FiZap className="text-[0.75rem]" />
+                  AI Suggest
+                </button>
+              </div>
+
+              {/* AI Suggestions Panel */}
+              {showSuggestions && (
+                <div className="relative rounded-xl border border-accent-purple/25 bg-bg-card/95 backdrop-blur-xl
+                  shadow-[0_8px_32px_rgba(0,0,0,0.5),0_0_20px_rgba(191,0,255,0.08)] overflow-hidden">
+                  <div className="h-0.5 bg-gradient-to-r from-accent-purple to-accent-cyan" />
+                  <div className="p-3">
+                    <p className="text-[0.65rem] font-semibold uppercase tracking-widest text-text-muted mb-2.5 flex items-center gap-1.5">
+                      <FiZap className="text-accent-purple" /> AI-generated suggestions — click to use
+                    </p>
+                    {aiLoading ? (
+                      <div className="flex items-center gap-2 py-3 px-2">
+                        <span className="w-3 h-3 rounded-full bg-accent-purple animate-pulse" />
+                        <span className="w-3 h-3 rounded-full bg-accent-cyan animate-pulse [animation-delay:0.2s]" />
+                        <span className="w-3 h-3 rounded-full bg-accent-purple animate-pulse [animation-delay:0.4s]" />
+                        <span className="text-xs text-text-muted ml-1">Generating suggestions…</span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col gap-2">
+                        {aiSuggestions.map((s, i) => (
+                          <button
+                            key={i}
+                            type="button"
+                            onClick={() => applySuggestion(s)}
+                            className="text-left text-xs text-text-secondary leading-relaxed px-3 py-2.5 rounded-lg
+                              border border-white/[0.06] bg-white/[0.02] hover:bg-accent-purple/10
+                              hover:border-accent-purple/30 hover:text-text-primary transition-all duration-150"
+                          >
+                            <span className="inline-block text-[0.6rem] font-bold text-accent-purple mr-1.5 uppercase tracking-wider">#{i+1}</span>
+                            {s}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
               <textarea id="message" name="message" rows={6}
                 placeholder="Tell me about your project, data needs, or how I can help..."
                 value={form.message} onChange={handleChange} required className={`${inputCls} resize-y`} />
