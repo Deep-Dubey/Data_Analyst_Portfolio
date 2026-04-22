@@ -1,0 +1,66 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
+  theme: {
+    extend: {
+      colors: {
+        'bg-primary':    '#000000',
+        'bg-secondary':  '#060606',
+        'bg-card':       '#0d0d0d',
+        'accent-cyan':   '#00ff41',
+        'accent-blue':   '#ff2079',
+        'accent-purple': '#bf00ff',
+        'accent-green':  '#bfff00',
+        'accent-orange': '#ff4500',
+        'accent-yellow': '#ffe600',
+        'text-primary':  '#f0ffe8',
+        'text-secondary':'#7a9e7e',
+        'text-muted':    '#334433',
+      },
+      fontFamily: {
+        sans:  ['Inter', 'sans-serif'],
+        space: ['"Space Grotesk"', 'sans-serif'],
+      },
+      boxShadow: {
+        'glow-cyan':  '0 0 40px rgba(0,255,65,0.25)',
+        'glow-sm':    '0 0 12px rgba(0,255,65,0.5)',
+        'glow-lg':    '0 0 40px rgba(0,255,65,0.35)',
+        card:         '0 12px 40px rgba(0,0,0,0.35)',
+        'card-hover': '0 20px 60px rgba(0,0,0,0.4)',
+      },
+      animation: {
+        'blink':        'blink 1.4s step-end infinite',
+        'loader-grid':  'gridPan 8s linear infinite',
+        'loader-bar':   'barWave 1.8s ease-in-out infinite alternate',
+        'loader-card':  'cardIn .6s ease both',
+        'icon-pulse':   'iconPulse 2.4s ease-in-out infinite',
+        'particle-rise':'particleRise 4s ease-in infinite',
+        'blink':        'blink 0.9s step-end infinite',
+        'bounce-y':     'bounceY 1.5s ease-in-out infinite',
+        'float-code':   'floatCode linear infinite',
+        'pulse-dot':    'pulseDot 1.8s ease-in-out infinite',
+        'heartbeat':    'heartbeat 1.5s ease-in-out infinite',
+        'fade-in-up':   'fadeInUp 0.7s ease both',
+        'fade-in-right':'fadeInRight 0.9s 0.2s ease both',
+        'draw-line':    'drawLine 1.5s 0.5s ease forwards',
+      },
+      keyframes: {
+        blink:       { '50%': { opacity: '0' } },
+        bounceY:     { '0%,100%': { transform:'translateY(0)' }, '50%': { transform:'translateY(5px)' } },
+        floatCode:   {
+          '0%':   { left:'-50%', opacity:'0' },
+          '5%':   { opacity:'1' },
+          '95%':  { opacity:'0.5' },
+          '100%': { left:'110%', opacity:'0' },
+        },
+        pulseDot:    { '0%,100%': { opacity:'1',transform:'scale(1)' }, '50%': { opacity:'0.6',transform:'scale(1.3)' } },
+        heartbeat:   { '0%,100%': { transform:'scale(1)' }, '25%': { transform:'scale(1.2)' } },
+        fadeInUp:    { from:{ opacity:'0',transform:'translateY(30px)' }, to:{ opacity:'1',transform:'translateY(0)' } },
+        fadeInRight: { from:{ opacity:'0',transform:'translateX(40px)' }, to:{ opacity:'1',transform:'translateX(0)' } },
+        drawLine:    { to: { 'stroke-dashoffset': '0' } },
+      },
+    },
+  },
+  plugins: [],
+}
+

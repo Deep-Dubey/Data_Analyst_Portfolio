@@ -1,0 +1,69 @@
+/* Ghost code float animation */
+.ghost-code {
+  /* Fade-out near edges so the motion feels softer */
+  -webkit-mask-image:
+    linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%),
+    linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+  mask-image:
+    linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%),
+    linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+.ghost-line {
+  position: absolute;
+  left: -100%;
+  font-family: 'Courier New', monospace;
+  font-size: 0.76rem;
+  line-height: 1;
+  color: transparent;
+  white-space: nowrap;
+  animation: floatCode linear infinite;
+  letter-spacing: 0.06em;
+  pointer-events: none;
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-image: linear-gradient(
+    90deg,
+    rgba(0, 255, 65, 0.11),
+    rgba(191, 0, 255, 0.075),
+    rgba(0, 229, 255, 0.075)
+  );
+  text-shadow:
+    0 0 14px rgba(0, 255, 65, 0.08),
+    0 0 18px rgba(191, 0, 255, 0.05);
+  filter: blur(0.2px);
+  will-change: left, opacity, transform;
+}
+
+@keyframes floatCode {
+  0%   { left: -45%; opacity: 0; transform: translateY(6px); }
+  8%   { opacity: 1; transform: translateY(0px); }
+  55%  { opacity: 0.75; transform: translateY(-10px); }
+  90%  { opacity: 0.25; transform: translateY(4px); }
+  100% { left: 112%; opacity: 0; transform: translateY(10px); }
+}
+
+@media (max-width: 767px) {
+  .ghost-line {
+    font-size: 0.68rem;
+    letter-spacing: 0.05em;
+    filter: blur(0.35px);
+    opacity: 0.85;
+  }
+}
+
+/* SVG trend line draw animation */
+.trend-poly {
+  stroke-dasharray: 800;
+  stroke-dashoffset: 800;
+}
+
+.trend-poly--animated {
+  animation: drawLine 1.5s 0.5s ease forwards;
+}
+
+@keyframes drawLine {
+  to { stroke-dashoffset: 0; }
+}

@@ -1,0 +1,16 @@
+/* Tailwind handles layout — only keep non-utility overrides here */
+section {
+  position: relative;
+  z-index: 1;
+}
+
+section:nth-child(even) {
+  background: rgba(10, 22, 40, 0.6);
+}
+
+/* Mobile: add bottom padding so bottom nav doesn't cover content */
+@media (max-width: 767px) {
+  main {
+    padding-bottom: 80px;
+  }
+}

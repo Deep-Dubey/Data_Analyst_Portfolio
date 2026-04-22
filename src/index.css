@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Base resets & globals ───────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html  { scroll-behavior: smooth; }
+
+body  {
+  font-family: 'Inter', sans-serif;
+  background-color: #000000;
+  color: #f0ffe8;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar        { width: 5px; }
+::-webkit-scrollbar-track  { background: #000000; }
+::-webkit-scrollbar-thumb  { background: #00ff41; border-radius: 3px; box-shadow: 0 0 6px #00ff41; }
+
+/* Text selection */
+::selection { background: rgba(0,255,65,0.3); color: #000; }
+
+/* Subtle dot/grid background for full page */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,255,65,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,65,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Tailwind layer utilities used across components ─────────── */
+@layer utilities {
+  .bg-clip-text { -webkit-background-clip: text; background-clip: text; }
+}
+
+/* ── CSS custom properties (kept for Recharts / third-party libs) */
+:root {
+  --bg-primary:    #000000;
+  --bg-secondary:  #060606;
+  --bg-card:       #0d0d0d;
+  --bg-card2:      #0a0a0a;
+  --accent-cyan:   #00ff41;
+  --accent-blue:   #ff2079;
+  --accent-purple: #bf00ff;
+  --accent-green:  #bfff00;
+  --accent-orange: #ff4500;
+  --accent-yellow: #ffe600;
+  --text-primary:  #f0ffe8;
+  --text-secondary:#7a9e7e;
+  --text-muted:    #334433;
+  --border:        rgba(0, 255, 65, 0.12);
+  --glow-cyan:     0 0 40px rgba(0, 255, 65, 0.25);
+  --glow-blue:     0 0 40px rgba(255, 32, 121, 0.2);
+}
