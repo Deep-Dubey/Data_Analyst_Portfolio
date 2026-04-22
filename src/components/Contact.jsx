@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { FiMail, FiMapPin, FiPhone, FiSend, FiGithub, FiLinkedin, FiTwitter, FiCheckCircle, FiX, FiZap } from 'react-icons/fi'
+import { FiMail, FiMapPin, FiPhone, FiSend, FiGithub, FiLinkedin, FiCheckCircle, FiX, FiZap } from 'react-icons/fi'
 import emailjs from '@emailjs/browser'
 import SectionParallax from './SectionParallax'
 
@@ -169,7 +169,6 @@ export default function Contact() {
               {[
                 { icon:<FiGithub />,   href:'https://github.com' },
                 { icon:<FiLinkedin />, href:'https://linkedin.com' },
-                { icon:<FiTwitter />,  href:'https://twitter.com' },
               ].map((s,i) => (
                 <a key={i} href={s.href} target="_blank" rel="noreferrer"
                   className="w-10 h-10 border border-accent-cyan/10 rounded-xl flex items-center justify-center text-text-secondary text-lg no-underline hover:text-accent-cyan hover:border-accent-cyan/30 hover:bg-accent-cyan/8 transition-all">

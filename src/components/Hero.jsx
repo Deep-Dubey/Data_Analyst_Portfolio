@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { Link } from 'react-scroll'
-import { FiArrowDown, FiDownload, FiGithub, FiLinkedin, FiTwitter } from 'react-icons/fi'
+import { FiArrowDown, FiDownload, FiGithub, FiLinkedin } from 'react-icons/fi'
 import { useParallaxLayers } from '../hooks/useParallax'
 import './Hero.css'
 
@@ -118,7 +118,6 @@ export default function Hero() {
             {[
               { icon:<FiGithub />,   href:'https://github.com' },
               { icon:<FiLinkedin />, href:'https://linkedin.com' },
-              { icon:<FiTwitter />,  href:'https://twitter.com' },
             ].map((s, i) => (
               <a key={i} href={s.href} target="_blank" rel="noreferrer"
                 className="w-11 h-11 border border-accent-cyan/12 rounded-xl flex items-center justify-center text-text-secondary text-lg no-underline hover:text-accent-cyan hover:border-accent-cyan hover:bg-accent-cyan/8 hover:-translate-y-0.5 transition-all">
